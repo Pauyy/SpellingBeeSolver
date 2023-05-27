@@ -1,10 +1,4 @@
-import com.microsoft.playwright.Browser;
-import com.microsoft.playwright.BrowserType;
-import com.microsoft.playwright.Page;
-import com.microsoft.playwright.Playwright;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
+import com.microsoft.playwright.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,6 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Spelling {
 
@@ -51,10 +46,10 @@ public class Spelling {
 
     private static void getLetters(Page page){
         //Selects all hives and retrieve the letters
-        String hive = page.innerHTML("div.hive");
-        Document parsedHive = Jsoup.parse(hive);
-        Elements cellLetters = parsedHive.select("text.cell-letter");
-        List<String> eachLetter = cellLetters.eachText();//First Element is the main letter
+        ElementHandle hive = page.querySelector("div.hive");
+        List<ElementHandle> cellLetters = hive.querySelectorAll("text.cell-letter");
+        //The .toList() creates an unmodifiable list
+        List<String> eachLetter = cellLetters.stream().map(ElementHandle::textContent).collect(Collectors.toList());//First Element is the main letter
 
         mainLetter = eachLetter.get(0).toLowerCase();
         eachLetter.remove(0); //mainLetter is not needed anymore
