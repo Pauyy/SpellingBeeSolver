@@ -29,8 +29,8 @@ public class Spelling {
             typeAllWords(allCorrectWords, page);
 
 
-            Thread.sleep(5000);
-        } catch (InterruptedException | FileNotFoundException e) {
+            page.waitForTimeout(5000);
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
